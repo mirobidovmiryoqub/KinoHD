@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Showtimes | Cinema Hub</title>
+  <style>
+    /* Global Styles */
+    :root {
+      --primary-color: #FF6B6B;
+      --secondary-color: #4ECDC4;
+      --accent-color: #FFE66D;
+      --dark-color: #292F36;
+      --light-color: #F7FFF7;
+      --danger-color: #FF6B6B;
+      --success-color: #6BCB77;
+      --warning-color: #FFD166;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      color: var(--dark-color);
+      background-color: var(--light-color);
+    }
+    
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 2rem;
+      overflow: hidden;
+    }
+    
+    .text-primary { color: var(--primary-color); }
+    .text-secondary { color: var(--secondary-color); }
+    .text-accent { color: var(--accent-color); }
+    .text-danger { color: var(--danger-color); }
+    .text-success { color: var(--success-color); }
+    .text-warning { color: var(--warning-color); }
+    
+    .bg-primary { background-color: var(--primary-color); }
+    .bg-secondary { background-color: var(--secondary-color); }
+    .bg-accent { background-color: var(--accent-color); }
+    .bg-dark { background-color: var(--dark-color); }
+    .bg-light { background-color: var(--light-color); }
+    
+    .py-1 { padding: 1rem 0; }
+    .py-2 { padding: 2rem 0; }
+    .py-3 { padding: 3rem 0; }
+    .py-5 { padding: 5rem 0; }
+    
+    /* Header Styles */
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo a {
+      color: white;
+      text-decoration: none;
+      font-size: 2rem;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-links li a {
+      color: white;
+      text-decoration: none;
+      padding: 0.75rem 1.25rem;
+      margin: 0 0.25rem;
+      transition: all 0.3s ease;
+      border-radius: 30px;
+      font-weight: 500;
+    }
+    
+    .nav-links li a:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    
+    .nav-links li a.active {
+      background: white;
+      color: var(--primary-color);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Section Header */
+    .section-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .section-header h2 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--dark-color);
+      opacity: 0.8;
+    }
+    
+    /* Filters Section */
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      gap: 1rem;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .filter-group {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .filter-group label {
+      margin-right: 0.75rem;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    .filter-group select,
+    .filter-group input {
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 2px solid var(--secondary-color);
+      width: 100%;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-group select:focus,
+    .filter-group input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(255,107,107,0.2);
+    }
+    
+    /* Showtimes Table */
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .showtimes-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .showtimes-table th,
+    .showtimes-table td {
+      padding: 1.25rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .showtimes-table thead th {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+    }
+    
+    .showtimes-table tbody tr:nth-child(even) {
+      background-color: rgba(78, 205, 196, 0.05);
+    }
+    
+    .showtimes-table tbody tr:hover {
+      background-color: rgba(255, 230, 109, 0.15);
+      transform: scale(1.01);
+      transition: transform 0.2s ease;
+    }
+    
+    .showtimes-table tbody tr:focus {
+      outline: 3px solid var(--accent-color);
+      outline-offset: -3px;
+    }
+    
+    .movie-title {
+      font-weight: 600;
+      text-align: left;
+      color: var(--dark-color);
+    }
+    
+    .rating {
+      display: inline-block;
+      background: var(--dark-color);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .rating.high {
+      background: var(--success-color);
+    }
+    
+    .rating.medium {
+      background: var(--warning-color);
+      color: var(--dark-color);
+    }
+    
+    .rating.low {
+      background: var(--danger-color);
+    }
+    
+    .almost-sold-out {
+      color: var(--danger-color);
+      font-weight: bold;
+      background: rgba(255,107,107,0.1);
+      padding: 0.5rem;
+      border-radius: 6px;
+    }
+    
+    .many-seats {
+      color: var(--success-color);
+      font-weight: bold;
+      background: rgba(107,203,119,0.1);
+      padding: 0.5rem;
+      border-radius: 6px;
+    }
+    
+    .few-seats {
+      color: var(--warning-color);
+      font-weight: bold;
+      background: rgba(255,209,102,0.1);
+      padding: 0.5rem;
+      border-radius: 6px;
+    }
+    
+    /* Button Styles */
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 0.75rem 1.75rem;
+      text-decoration: none;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      font-weight: 600;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      background: linear-gradient(135deg, #FF5252, #3DBEB8);
+    }
+    
+    .btn:active {
+      transform: translateY(1px);
+    }
+    
+    .btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255,230,109,0.5);
+    }
+    
+    .btn-disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    
+    /* Footer Styles */
+    footer {
+      background: var(--dark-color);
+      color: white;
+      text-align: center;
+      padding: 3rem 0;
+      margin-top: 3rem;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+    
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: var(--accent-color);
+    }
+    
+    .social-icons {
+      margin: 1.5rem 0;
+    }
+    
+    .social-icons a {
+      color: white;
+      font-size: 1.5rem;
+      margin: 0 0.75rem;
+      transition: all 0.3s ease;
+    }
+    
+    .social-icons a:hover {
+      color: var(--accent-color);
+      transform: translateY(-3px);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .nav-links {
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .nav-links li {
+        margin: 0.5rem;
+      }
+      
+      .filters {
+        flex-direction: column;
+      }
+      
+      .filter-group {
+        margin-bottom: 1rem;
+        min-width: 100%;
+      }
+      
+      .showtimes-table {
+        font-size: 0.9rem;
+      }
+      
+      .showtimes-table th,
+      .showtimes-table td {
+        padding: 0.75rem;
+      }
+      
+      .section-header h2 {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <nav id="navbar" class="navbar" aria-label="Main navigation">
+      <div class="container">
+        <h1 class="logo"><a href="index.html">Cinema Hub</a></h1>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="movies.html">Movies</a></li>
+          <li><a href="showtimes.html" class="active">Showtimes</a></li>
+          <li><a href="reviews.html">Reviews</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Showtimes Section -->
+  <main>
+    <section id="showtimes" class="py-5">
+      <div class="container">
+        <header class="section-header">
+          <h2><span class="text-primary">Movie</span> Showtimes</h2>
+          <p class="subtitle">Check out today's screenings and book your tickets in advance</p>
+        </header>
+
+        <!-- Filters Section -->
+        <div class="filters">
+          <div class="filter-group">
+            <label for="showtime-date"><i class="fas fa-calendar-alt"></i> Date:</label>
+            <input type="date" id="showtime-date" name="showtime-date">
+          </div>
+          
+          <div class="filter-group">
+            <label for="theater-location"><i class="fas fa-map-marker-alt"></i> Theater:</label>
+            <select id="theater-location" name="theater-location">
+              <option value="all">All Theaters</option>
+              <option value="downtown">Downtown Cinema</option>
+              <option value="mall">Mall Multiplex</option>
+              <option value="premium">Premium Theater</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="movie-genre"><i class="fas fa-film"></i> Genre:</label>
+            <select id="movie-genre" name="movie-genre">
+              <option value="all">All Genres</option>
+              <option value="action">Action</option>
+              <option value="comedy">Comedy</option>
+              <option value="drama">Drama</option>
+              <option value="horror">Horror</option>
+              <option value="family">Family</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="showtimes-table" aria-label="Movie showtimes schedule">
+            <thead>
+              <tr>
+                <th>Movie Title</th>
+                <th>Genre</th>
+                <th>Duration</th>
+                <th>Rating</th>
+                <th>Showtime</th>
+                <th>Available Seats</th>
+                <th>Book Tickets</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr tabindex="0">
+                <td class="movie-title">The Last Guardian <span class="rating high">8.2/10</span></td>
+                <td>Action, Adventure</td>
+                <td>2h 15m</td>
+                <td>PG-13</td>
+                <td><i class="fas fa-clock text-secondary"></i> 12:30 PM</td>
+                <td class="almost-sold-out"><i class="fas fa-chair"></i> 5 left</td>
+                <td><a href="book-ticket1.html" class="btn">Book Now</a></td>
+              </tr>
+              <tr tabindex="0">
+                <td class="movie-title">Love in Paris <span class="rating medium">7.5/10</span></td>
+                <td>Drama, Romance</td>
+                <td>1h 55m</td>
+                <td>R</td>
+                <td><i class="fas fa-clock text-secondary"></i> 3:45 PM</td>
+                <td class="few-seats"><i class="fas fa-chair"></i> 12 left</td>
+                <td><a href="book-ticket2.html" class="btn">Book Now</a></td>
+              </tr>
+              <tr tabindex="0">
+                <td class="movie-title">Family Fun <span class="rating medium">6.9/10</span></td>
+                <td>Comedy, Family</td>
+                <td>1h 45m</td>
+                <td>G</td>
+                <td><i class="fas fa-clock text-secondary"></i> 6:00 PM</td>
+                <td class="many-seats"><i class="fas fa-chair"></i> 50 left</td>
+                <td><a href="book-ticket3.html" class="btn">Book Now</a></td>
+              </tr>
+              <tr tabindex="0">
+                <td class="movie-title">Haunted Nights <span class="rating medium">7.1/10</span></td>
+                <td>Horror, Mystery</td>
+                <td>2h 05m</td>
+                <td>R</td>
+                <td><i class="fas fa-clock text-secondary"></i> 9:15 PM</td>
+                <td class="many-seats"><i class="fas fa-chair"></i> 35 left</td>
+                <td><a href="book-ticket4.html" class="btn">Book Now</a></td>
+              </tr>
+              <tr tabindex="0">
+                <td class="movie-title">Space Odyssey <span class="rating high">8.8/10</span></td>
+                <td>Sci-Fi, Adventure</td>
+                <td>2h 30m</td>
+                <td>PG-13</td>
+                <td><i class="fas fa-clock text-secondary"></i> 4:00 PM</td>
+                <td class="almost-sold-out"><i class="fas fa-chair"></i> 2 left</td>
+                <td><a href="book-ticket5.html" class="btn">Book Now</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Section -->
+  <footer id="main-footer">
+    <div class="container">
+      <h3>Cinema Hub</h3>
+      <div class="footer-links">
+        <a href="#">About Us</a>
+        <a href="#">Careers</a>
+        <a href="#">News</a>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+      <p>&copy; 2025 Cinema Hub. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set default date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('showtime-date').value = today;
+      
+      // Theater location change handler
+      document.getElementById('theater-location').addEventListener('change', function() {
+        console.log('Selected theater:', this.value);
+        // In a real implementation, this would filter showtimes
+      });
+      
+      // Genre filter change handler
+      document.getElementById('movie-genre').addEventListener('change', function() {
+        console.log('Selected genre:', this.value);
+        // In a real implementation, this would filter movies
+      });
+      
+      // Date change handler
+      document.getElementById('showtime-date').addEventListener('change', function() {
+        console.log('Selected date:', this.value);
+        // In a real implementation, this would load showtimes for selected date
+      });
+      
+      // Keyboard navigation for table rows
+      const tableRows = document.querySelectorAll('.showtimes-table tbody tr');
+      tableRows.forEach(row => {
+        row.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            const link = this.querySelector('a.btn');
+            if (link) link.click();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

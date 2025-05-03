@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Latest Reviews | Cinema Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== CSS Variables ========== */
+    :root {
+      --primary: #E50914;
+      --primary-dark: #B2070F;
+      --secondary: #221F1F;
+      --light: #F5F5F1;
+      --dark: #000000;
+      --text: #333333;
+      --text-light: #757575;
+      --white: #FFFFFF;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      --radius: 8px;
+    }
+
+    /* ========== Base Styles ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      padding: 80px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .text-primary {
+      color: var(--primary);
+    }
+
+    .bg-light {
+      background-color: var(--light);
+    }
+
+    .bg-dark {
+      background-color: var(--dark);
+      color: var(--white);
+    }
+
+    .py-3 { padding: 3rem 0; }
+    .py-5 { padding: 5rem 0; }
+
+    /* ========== Header & Navigation ========== */
+    header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+
+    header.scrolled {
+      background-color: rgba(0, 0, 0, 0.95);
+      box-shadow: var(--shadow);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-links li {
+      margin-left: 30px;
+      position: relative;
+    }
+
+    .nav-links a {
+      color: var(--white);
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      padding: 5px 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      width: 30px;
+      height: 20px;
+      position: relative;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      display: block;
+      position: absolute;
+      height: 3px;
+      width: 100%;
+      background: var(--white);
+      border-radius: 3px;
+      opacity: 1;
+      left: 0;
+      transform: rotate(0deg);
+      transition: .25s ease-in-out;
+    }
+
+    .hamburger span:nth-child(1) {
+      top: 0;
+    }
+
+    .hamburger span:nth-child(2),
+    .hamburger span:nth-child(3) {
+      top: 10px;
+    }
+
+    .hamburger span:nth-child(4) {
+      top: 20px;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      top: 10px;
+      width: 0%;
+      left: 50%;
+    }
+
+    .hamburger.open span:nth-child(2) {
+      transform: rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(3) {
+      transform: rotate(-45deg);
+    }
+
+    .hamburger.open span:nth-child(4) {
+      top: 10px;
+      width: 0%;
+      left: 50%;
+    }
+
+    /* ========== Reviews Section ========== */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .review-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 30px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .review-box:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .review-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--primary);
+    }
+
+    .review-box h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: var(--secondary);
+    }
+
+    .review-box h3 em {
+      font-style: normal;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .stars {
+      color: #FFC107;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    .stars .far {
+      color: #E0E0E0;
+    }
+
+    .review-box p {
+      color: var(--text-light);
+      position: relative;
+      padding-left: 20px;
+      font-style: italic;
+    }
+
+    .review-box p::before {
+      content: '"';
+      position: absolute;
+      left: 0;
+      top: -5px;
+      font-size: 2rem;
+      color: rgba(229, 9, 20, 0.1);
+      font-family: Georgia, serif;
+    }
+
+    .review-meta {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .reviewer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .review-date {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    /* ========== Review Filter ========== */
+    .review-filter {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .filter-btn {
+      padding: 8px 20px;
+      border-radius: 50px;
+      background: transparent;
+      border: 1px solid #ddd;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    /* ========== Footer ========== */
+    footer {
+      background: var(--secondary);
+      color: var(--white);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    /* ========== Responsive Styles ========== */
+    @media (max-width: 992px) {
+      .section {
+        padding: 60px 0;
+      }
+      
+      .section-title {
+        font-size: 2.2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+      
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 350px;
+        height: 100vh;
+        background: var(--secondary);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+      }
+      
+      .nav-links.active {
+        right: 0;
+      }
+      
+      .nav-links li {
+        margin: 15px 0;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .section {
+        padding: 50px 0;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">CINEMA<span>HUB</span></a>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="movies.html">Movies</a></li>
+          <li><a href="showtimes.html">Showtimes</a></li>
+          <li><a href="reviews.html" class="active">Reviews</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Reviews Section -->
+  <main>
+    <section id="reviews" class="section bg-light">
+      <div class="container">
+        <header class="section-header">
+          <h2 class="section-title"><span class="text-primary">Latest</span> Reviews</h2>
+          <p class="subtitle">See what viewers are saying about the newest releases</p>
+        </header>
+
+        <!-- Review Filter -->
+        <div class="review-filter">
+          <button class="filter-btn active">All Reviews</button>
+          <button class="filter-btn">5 Star</button>
+          <button class="filter-btn">4 Star</button>
+          <button class="filter-btn">3 Star</button>
+          <button class="filter-btn">Movies</button>
+          <button class="filter-btn">TV Shows</button>
+        </div>
+
+        <div class="reviews-grid">
+          <!-- Review 1 -->
+          <article class="review-box">
+            <h3>John Doe - <em>The Last Guardian</em></h3>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+              <i class="far fa-star"></i>
+              <span>3.5/5</span>
+            </div>
+            <p>Visually stunning and emotionally powerful. The Last Guardian is a must-watch for fantasy lovers with breathtaking cinematography and a moving storyline that stays with you long after the credits roll.</p>
+            <div class="review-meta">
+              <div class="reviewer-avatar">JD</div>
+              <div class="review-date">Posted on May 15, 2025</div>
+            </div>
+          </article>
+
+          <!-- Review 2 -->
+          <article class="review-box">
+            <h3>Sarah Ali - <em>Love in Paris</em></h3>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <span>5/5</span>
+            </div>
+            <p>A beautifully directed romance with heartfelt performances. It exceeded all my expectations with its authentic portrayal of love and loss. The chemistry between the leads was electric!</p>
+            <div class="review-meta">
+              <div class="reviewer-avatar">SA</div>
+              <div class="review-date">Posted on May 12, 2025</div>
+            </div>
+          </article>
+
+          <!-- Review 3 -->
+          <article class="review-box">
+            <h3>Mike Tashkent - <em>Haunted Nights</em></h3>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+              <span>3/5</span>
+            </div>
+            <p>Creepy atmosphere, great soundtrack, but the storyline needed more depth. Still a fun horror watch with some genuinely scary moments that made me jump out of my seat!</p>
+            <div class="review-meta">
+              <div class="reviewer-avatar">MT</div>
+              <div class="review-date">Posted on May 10, 2025</div>
+            </div>
+          </article>
+
+          <!-- Review 4 -->
+          <article class="review-box">
+            <h3>Lola Karimova - <em>Code Zero</em></h3>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+              <span>2.5/5</span>
+            </div>
+            <p>Cool concept, but a bit too predictable. Action scenes were decent though! The car chase in the second act was particularly well-shot and exciting.</p>
+            <div class="review-meta">
+              <div class="reviewer-avatar">LK</div>
+              <div class="review-date">Posted on May 8, 2025</div>
+            </div>
+          </article>
+
+          <!-- Review 5 -->
+          <article class="review-box">
+            <h3>Alex Chen - <em>Galactic Wars</em></h3>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="far fa-star"></i>
+              <span>4/5</span>
+            </div>
+            <p>Epic space battles and stunning visual effects make this a must-see on the big screen. While the plot follows familiar tropes, the execution is nearly flawless.</p>
+            <div class="review-meta">
+              <div class="reviewer-avatar">AC</div>
+              <div class="review-date">Posted on May 5, 2025</div>
+            </div>
+          </article>
+
+          <!-- Review 6 -->
+          <article class="review-box">
+            <h3>Emma Wilson - <em>Family Ties</em></h3>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+              <span>4.5/5</span>
+            </div>
+            <p>Heartwarming and hilarious! This film perfectly balances comedy and drama, with standout performances from the entire cast. The ending had me in tears - both from laughter and emotion.</p>
+            <div class="review-meta">
+              <div class="reviewer-avatar">EW</div>
+              <div class="review-date">Posted on May 3, 2025</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark">
+    <div class="container">
+      <p>Cinema Hub &copy; 2025 | All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile Navigation
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('active');
+    });
+    
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('active');
+      });
+    });
+    
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Review filter functionality
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // In a real app, this would filter the reviews
+        console.log(`Filtering by: ${btn.textContent}`);
+      });
+    });
+  </script>
+</body>
+</html>
